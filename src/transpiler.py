@@ -3,7 +3,7 @@ from io import BytesIO
 from sys import argv, exit
 
 try:
-    from src.aliases import VOCABULARY
+    from aliases import VOCABULARY
 except ImportError:
     print("[Tiramisu] Error: Could not find aliases. Does the file exist and is it empty?")
     exit(1)
