@@ -1,11 +1,12 @@
 from tokenize import tokenize, untokenize, NAME
-from io import BytesIO
 from sys import argv, exit
+from io import BytesIO
 
+# Импорт словаря
 try:
-    from aliases import VOCABULARY, RECIPE_BOOK
+    from aliases import VOCABULARY, INVERSE_VOCAB
 except ImportError:
-    print("[Tiramisu] Error: Could not find aliases. Does the file exist and is it empty?")
+    print("[Tiramisu] Error: Could not find \"aliases.py\". Is the pantry empty?")
     exit(1)
 
 
@@ -19,14 +20,11 @@ def translate_tiramisu(code_string: str) -> str:
     result = []
 
     for token in tokens:
-        token_type = token.type
-        token_string = token.string
-
-        # Замена только имён (переменных, ключевых слов), а не строк
-        if token_type == NAME and token_string in VOCABULARY:
-            result.append((token_type, VOCABULARY[token_string]))
+        # Замена ключевых слов Python, не затрагивая строки
+        if token.type == NAME and token.string in VOCABULARY:
+            result.append((token.type, VOCABULARY[token.string]))
         else:
-            result.append((token_type, token_string))
+            result.append((token.type, token.string))
 
     return untokenize(result).decode('utf-8')
 
@@ -36,11 +34,11 @@ def format_error(exception_msg: str) -> str:
     Форматирует сообщение об ошибке, заменяя слова Python на Tiramisu.
     :param exception_msg: Сообщение об ошибке на Python
     """
-    for py_word, tira_word in RECIPE_BOOK.items():
-        # Добавочные пробелы, чтобы не заменять кусок слова
+    for py_word, tira_word in INVERSE_VOCAB.items():
+        # Добавление пробелов в словах, чтобы не заменять кусок слова
         exception_msg = exception_msg.replace(f"'{py_word}'", f"'{tira_word}'")
-        exception_msg = exception_msg.replace(f" {py_word} ", f" {tira_word} ")
-    return exception_msg
+        result_msg = exception_msg.replace(f" {py_word} ", f" {tira_word} ")
+    return result_msg
 
 
 def run_file(filename: str) -> None:
@@ -62,6 +60,6 @@ def run_file(filename: str) -> None:
 
 if __name__ == '__main__':
     if len(argv) < 2:
-        print("[Tiramisu] Usage: python tiramisu.py <filename.tira>")
+        print("[Tiramisu] Usage: python transpiler.py <recipe.tira>")
     else:
         run_file(argv[1])

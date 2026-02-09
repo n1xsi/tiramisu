@@ -73,4 +73,4 @@ VOCABULARY = {
 
 # Обратный словарь (Python -> Tiramisu)
 # Необходим для сообщений об ошибках, чтобы писать: "Expected candy, got licorice" вместо "Expected int, got str"
-RECIPE_BOOK = {value: key for key, value in VOCABULARY.items()}
+INVERSE_VOCAB = {value: key for key, value in VOCABULARY.items()}
