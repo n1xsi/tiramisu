@@ -36,8 +36,8 @@ def format_error(exception_msg: str) -> str:
     """
     for py_word, tira_word in INVERSE_VOCAB.items():
         # Добавление пробелов в словах, чтобы не заменять кусок слова
-        exception_msg = exception_msg.replace(f"'{py_word}'", f"'{tira_word}'")
-        result_msg = exception_msg.replace(f" {py_word} ", f" {tira_word} ")
+        replacing_msg = exception_msg.replace(f"'{py_word}'", f"'{tira_word}'")
+        result_msg = replacing_msg.replace(f" {py_word} ", f" {tira_word} ")
     return result_msg
 
 
@@ -46,11 +46,22 @@ def run_file(filename: str) -> None:
     Запускает файл с кодом на Tiramisu.
     :param filename: Имя файла с кодом на Tiramisu
     """
-    with open(filename, 'r', encoding='utf-8') as file:
-        source_code = file.read()
+    # Чтение кода из файла
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            source_code = file.read()
+    except FileNotFoundError:
+        print(f"[Tiramisu] File not found: {filename}")
+        return
 
-    python_code = translate_tiramisu(source_code)
+    # Транспиляция кода Tiramisu в Python
+    try:
+        python_code = translate_tiramisu(source_code)
+    except Exception as e:
+        print(f"[Tiramisu] Transpiler broken (Internal Error): {e}")
+        return
 
+    # Исполнение кода на Python
     try:
         exec(python_code, globals())
     except Exception as e:
