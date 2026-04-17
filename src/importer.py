@@ -7,7 +7,8 @@ from transpiler import translate_tiramisu, print_traceback
 
 
 class TiramisuLoader(Loader):
-    """Класс для импорта файлов с рецептом в Python"""
+    """Класс для импорта .tira-файлов с рецептом в Python"""
+
     def __init__(self, filename):
         self.filename = filename
 
@@ -21,7 +22,7 @@ class TiramisuLoader(Loader):
 
         # Перевод на Python
         python_code = translate_tiramisu(source_code)
-        
+
         # Назначение атрибутов, чтобы модуль знал свой путь
         module.__file__ = self.filename
         module.__loader__ = self
@@ -38,4 +39,27 @@ class TiramisuLoader(Loader):
 
 
 class TiramisuFinder(MetaPathFinder):
-    ...
+    """Класс для поиска импортируемых .tira-модулей с рецептом в Python"""
+
+    def find_spec(self, fullname, path, target=None):
+        if path is None:
+            path = sys.path
+
+        # Замена точек на слеши для вложенных импортов
+        name_path = fullname.replace('.', os.sep)
+
+        for entry in path:
+            # Поиск файла с расширением '.tira'
+            file_path = os.path.join(entry, name_path + '.tira')
+            if os.path.exists(file_path):
+                # Если файл найден, то он отдаётся загрузчику
+                return spec_from_loader(fullname, TiramisuLoader(file_path))
+
+        return None
+
+
+def enable_import_hook():
+    """Добавляет "магию" Tiramisu в стандартную систему импортов Python."""
+    if not any(isinstance(finder, TiramisuFinder) for finder in sys.meta_path):
+        # Вставка в самое начало списка, чтобы первым делом проверять '.tira'
+        sys.meta_path.insert(0, TiramisuFinder())
