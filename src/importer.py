@@ -3,8 +3,6 @@ from importlib.util import spec_from_loader
 import sys
 import os
 
-from transpiler import translate_tiramisu, print_traceback
-
 
 class TiramisuLoader(Loader):
     """Класс для импорта .tira-файлов с рецептом в Python"""
@@ -16,6 +14,9 @@ class TiramisuLoader(Loader):
         return None  # Позволяем Python создать пустой модуль по умолчанию
 
     def exec_module(self, module):
+        # Локальный импорт, чтобы избежать циклической зависимости
+        from transpiler import translate_tiramisu, print_traceback
+
         # Чтение рецепта из файла
         with open(self.filename, 'r', encoding='utf-8') as file:
             source_code = file.read()

@@ -1,7 +1,11 @@
 from tokenize import tokenize, untokenize, NAME
+from importer import enable_import_hook
 from sys import argv, exit, exc_info
 from traceback import extract_tb
 from io import BytesIO
+
+import sys
+import os
 
 # Импорт словаря
 try:
@@ -90,6 +94,14 @@ def run_file(filename: str) -> None:
     Запускает файл с кодом на Tiramisu.
     :param filename: Имя файла с кодом на Tiramisu
     """
+    # Добавление директории с рецептом в sys.path, чтобы поддерживать импорт из той же папки
+    recipe_dir = os.path.dirname(os.path.abspath(filename))
+    if recipe_dir not in sys.path:
+        sys.path.insert(0, recipe_dir)
+
+    # Включение хука для импорта, чтобы поддерживать импорт Tiramisu модулей
+    enable_import_hook()
+
     # Чтение кода из файла
     try:
         with open(filename, 'r', encoding='utf-8') as file:
