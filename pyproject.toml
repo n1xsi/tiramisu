@@ -1,0 +1,13 @@
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tiramisu-lang"
+version = "0.1.0"
+description = "Sweet esoteric language based on Python"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = []
+
+[project.scripts]
+tiramisu = "tiramisu.cli:main"
