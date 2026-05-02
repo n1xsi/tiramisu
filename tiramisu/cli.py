@@ -5,7 +5,7 @@ import argparse
 def main():
     # ------------------ Парсер команд ------------------
     parser = argparse.ArgumentParser(
-        description="🍰 Tiramisu Compiler",
+        description="🍰 Tiramisu Compiler - how it works:",
         prog="tiramisu"
     )
 
