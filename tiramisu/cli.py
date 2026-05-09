@@ -1,5 +1,15 @@
+from importlib.metadata import version, PackageNotFoundError
 from .transpiler import run_file, translate_tiramisu
 import argparse
+
+
+def get_version() -> str:
+    """Получает версию пакета из метаданных (pyproject.toml)."""
+    try:
+        return version("tiramisu-lang")
+    except PackageNotFoundError:
+        # Если запускают скрипт напрямую, без установки через pip
+        return "dev-unknown"
 
 
 def main():
@@ -10,10 +20,11 @@ def main():
     )
 
     # Флаг версии (tiramisu -v)
+    current_version = get_version()
     parser.add_argument(
         "-v", "--version",
         action="version",
-        version="%(prog)s 0.1.0"
+        version=f"%(prog)s {current_version}"
     )
 
     # ------------------ Подменю для команд ------------------
