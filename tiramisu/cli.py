@@ -15,7 +15,7 @@ def get_version() -> str:
 def main():
     # ------------------ Парсер команд ------------------
     parser = argparse.ArgumentParser(
-        description="🍰 Tiramisu Compiler - how it works:",
+        description="🍰🤎 Tiramisu Compiler - how it works:",
         prog="tiramisu"
     )
 

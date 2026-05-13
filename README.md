@@ -31,7 +31,7 @@
       🐍 Python
     </th>
     <th style="font-family: sans-serif">
-      🍰 Tiramisu
+      🍰🤎 Tiramisu
     </th>
   </tr>
   <!-- Строка с кодами -->
