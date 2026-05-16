@@ -15,7 +15,7 @@ def start_repl():
     enable_import_hook()
 
     print("🍰 Welcome to the Tiramisu REPL!")
-    print("Type 'exit()' or press Ctrl+Z / Ctrl+D to leave.\n")
+    print("Type 'exit()' or press Ctrl+Z+Enter to leave.\n")
 
     env = {"__name__": "__main__"}  # Память консоли
     buffer = []  # Буфер для многострочных команд (например, функции, циклы и т.д.)
@@ -53,7 +53,7 @@ def start_repl():
 
         # ПОПЫТКА КОМПИЛИРОВАНИЯ ПЕРЕВЕДЁННОГО КОДА
         try:
-            code_object = compiler(python_code, env, "<console>", "single")
+            code_object = compiler(python_code, "<console>", "single")
         except SyntaxError as e:
             print_traceback(e, "<console>", source_code.splitlines())
             buffer = []
